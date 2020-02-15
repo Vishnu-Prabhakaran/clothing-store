@@ -39,8 +39,9 @@ const client = new ApolloClient({
 // As soon as the client loads the index jas first we need to instantiate the writeData
 client.writeData({
   data: {
-    // Default value is set to true
-    cartHidden: true
+    // Default values of state
+    cartHidden: true,
+    cartItems: []
   }
 });
 

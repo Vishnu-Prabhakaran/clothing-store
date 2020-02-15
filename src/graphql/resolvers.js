@@ -1,11 +1,17 @@
 import { gql } from "apollo-boost";
+import { addItemToCart } from "./cart.utils";
 
 // Define Schema that local storage is going to use
 // Add new Mutations
 // Type mutations need to be capitalised 'ToggleCartHidden'
+// AddItemsToCart(item: Item): [Item] - takes an item and retuns an array
 export const typeDefs = gql`
+  extend type Item {
+    quantity: Int
+  }
   extend type Mutation {
     ToggleCartHidden: Boolean!
+    AddItemToCart(item: Item!): [Item]!
   }
 `;
 
@@ -15,6 +21,13 @@ export const typeDefs = gql`
 const GET_CART_HIDDEN = gql`
   {
     cartHidden @client
+  }
+`;
+
+// Get data from local cache
+const GET_CART_ITEMS = gql`
+  {
+    cartItems @client
   }
 `;
 
@@ -41,6 +54,20 @@ export const resolvers = {
       });
       // Finally we return the orginal cache value that we have reversed
       return !cartHidden;
+    },
+
+    addItemToCart: (_root, { item }, { cache }) => {
+      const { cartItems } = cache.readQuery({
+        query: GET_CART_ITEMS
+      });
+      const newCartItems = addItemToCart(cartItems, item);
+
+      cache.writeQuery({
+        query: GET_CART_ITEMS,
+        data: { cartItems: newCartItems }
+      });
+
+      return newCartItems;
     }
   }
 };
