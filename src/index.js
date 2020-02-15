@@ -41,7 +41,8 @@ client.writeData({
   data: {
     // Default values of state
     cartHidden: true,
-    cartItems: []
+    cartItems: [],
+    itemCount: 0
   }
 });
 

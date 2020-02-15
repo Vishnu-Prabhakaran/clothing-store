@@ -1,5 +1,5 @@
 import { gql } from "apollo-boost";
-import { addItemToCart } from "./cart.utils";
+import { addItemToCart, getCartItemCount } from "./cart.utils";
 
 // Define Schema that local storage is going to use
 // Add new Mutations
@@ -28,6 +28,13 @@ const GET_CART_HIDDEN = gql`
 const GET_CART_ITEMS = gql`
   {
     cartItems @client
+  }
+`;
+
+// Get data from local cache
+const GET_ITEM_COUNT = gql`
+  {
+    itemCount @client
   }
 `;
 
@@ -60,8 +67,17 @@ export const resolvers = {
       const { cartItems } = cache.readQuery({
         query: GET_CART_ITEMS
       });
-      const newCartItems = addItemToCart(cartItems, item);
 
+      const newCartItems = addItemToCart(cartItems, item);
+      
+      // Item Count (no need to readQuery)
+      cache.writeQuery({
+        query: GET_ITEM_COUNT,
+        data: { itemCount: getCartItemCount(newCartItems) }
+        
+      });
+      
+      // CartItems
       cache.writeQuery({
         query: GET_CART_ITEMS,
         data: { cartItems: newCartItems }
