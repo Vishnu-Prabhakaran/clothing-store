@@ -17,6 +17,8 @@ import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 // Apollo library
 import { ApolloClient, gql } from "apollo-boost";
+// Resolvers
+import { resolvers, typeDefs } from "./graphql/resolvers";
 
 // Create the connection link
 const httpLink = createHttpLink({
@@ -29,7 +31,17 @@ const cache = new InMemoryCache();
 // Client
 const client = new ApolloClient({
   link: httpLink,
-  cache
+  cache,
+  resolvers,
+  typeDefs
+});
+
+// As soon as the client loads the index jas first we need to instantiate the writeData
+client.writeData({
+  data: {
+    // Default value is set to true
+    cartHidden: true
+  }
 });
 
 // Request from GraphQl

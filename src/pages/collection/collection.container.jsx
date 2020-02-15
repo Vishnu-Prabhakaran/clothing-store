@@ -39,8 +39,9 @@ const CollectionPageContainer = ({ match }) => (
     variables={{ title: match.params.collectionId }}
   >
     {// destructure the data as it is returning data.getCollectionsByTitle
-    ({ loading, data: { getCollectionsByTitle } }) => {
+    ({ loading, data }) => {
       if (loading) return <Spinner />;
+      const { getCollectionsByTitle } = data;
       return <CollectionPage collection={getCollectionsByTitle} />;
     }}
   </Query>
