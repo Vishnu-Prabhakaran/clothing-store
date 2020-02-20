@@ -5,7 +5,8 @@ import CustomButton from '../custom-button/custom-button.component';
 
 const CollectionItem = ({ item, addItem }) => {
   const { name, price, imageUrl } = item;
-  console.log(`ADD ITEM ${addItem} and ITEM ${item}`)
+  console.log("addItem",addItem)
+  console.log("item",item)
   return (
     <div className='collection-item'>
       <div
